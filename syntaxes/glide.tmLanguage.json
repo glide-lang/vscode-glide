@@ -8,10 +8,13 @@
     { "include": "#strings" },
     { "include": "#chars" },
     { "include": "#numbers" },
+    { "include": "#attributes" },
     { "include": "#keywords" },
+    { "include": "#macro-call" },
     { "include": "#types" },
-    { "include": "#operators" },
     { "include": "#fn-decl" },
+    { "include": "#function-call" },
+    { "include": "#operators" },
     { "include": "#identifiers" }
   ],
   "repository": {
@@ -54,15 +57,19 @@
       "patterns": [
         {
           "name": "keyword.control.glide",
-          "match": "\\b(if|else|while|for|return|break|continue|match|defer|spawn|import)\\b"
+          "match": "\\b(if|else|while|for|in|return|break|continue|match|defer|defer_err|spawn|spawn_thread|import)\\b"
         },
         {
           "name": "keyword.declaration.glide",
-          "match": "\\b(let|const|fn|struct|enum|impl|interface|type|extern|pub|mut|move)\\b"
+          "match": "\\b(let|const|fn|struct|enum|impl|interface|trait|type|extern|pub|mut|move|dyn|macro|naked)\\b"
+        },
+        {
+          "name": "keyword.other.glide",
+          "match": "\\b(c_raw|c_include|c_link|asm|volatile)\\b"
         },
         {
           "name": "keyword.operator.glide",
-          "match": "\\b(as)\\b"
+          "match": "\\b(as|sizeof)\\b"
         },
         {
           "name": "constant.language.glide",
@@ -74,7 +81,7 @@
       "patterns": [
         {
           "name": "support.type.primitive.glide",
-          "match": "\\b(int|uint|long|ulong|i8|i16|i32|i64|u8|u16|u32|u64|usize|isize|f32|f64|float|bool|string|char|void|chan)\\b"
+          "match": "\\b(int|uint|long|ulong|i8|i16|i32|i64|i128|i256|u8|u16|u32|u64|u128|u256|usize|isize|f32|f64|float|bool|string|char|void|chan)\\b"
         },
         {
           "name": "entity.name.type.glide",
@@ -91,6 +98,23 @@
       "captures": {
         "1": { "name": "keyword.declaration.glide" },
         "2": { "name": "entity.name.function.glide" }
+      }
+    },
+    "attributes": {
+      "comment": "@cfg, @derive(...), @get/@post route attrs, @handler, etc.",
+      "name": "storage.modifier.attribute.glide",
+      "match": "@[A-Za-z_][A-Za-z0-9_]*"
+    },
+    "macro-call": {
+      "comment": "name!(...) macro invocations like println!, vec_of!, assert!",
+      "name": "entity.name.function.macro.glide",
+      "match": "\\b[A-Za-z_][A-Za-z0-9_]*!"
+    },
+    "function-call": {
+      "comment": "lowercase identifier directly before `(` — a call target. Covers method/constructor names like `new(`, `send(` that aren't type-cased.",
+      "match": "\\b([a-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+      "captures": {
+        "1": { "name": "entity.name.function.glide" }
       }
     },
     "identifiers": {
